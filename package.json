@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "serve": "npm run dev",
+    "serve": "json-server --watch db.json && npm run dev",
     "prod": "npm run lint && npm run build",
     "-----": "echo 0",
     "dev": "vite",
@@ -15,15 +15,17 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.2.8",
+    "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
+    "nanoid": "^5.1.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "nanoid": "^5.1.5",
-    "url-join": "^5.0.0",
     "swr": "^2.3.4",
+    "url-join": "^5.0.0",
     "zustand": "^5.0.8",
-    "@fontsource/roboto": "^5.2.8"
+    "json-server": "^1.0.0-beta.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
