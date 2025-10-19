@@ -6,7 +6,7 @@ import {PageRenderer} from "./PageRenderer.tsx";
 import {Registry} from "./Registry.ts";
 import {FormWidget} from "./widgets/FormWidget.tsx";
 import {fetchDsService} from "./widgets/FetchDsService.ts";
-import {CardList} from "./widgets/CardList.tsx";
+import {CardListWidget} from "./widgets/CardListWidget.tsx";
 import {TextField} from "./fields/TextField.tsx";
 import {NumberField} from "./fields/NumberField.tsx";
 import {HiddenField} from "./fields/HiddenField.tsx";
@@ -15,7 +15,7 @@ import {DropdownField} from "./fields/DropdownField.tsx";
 
 //In non prod need lazy loading
 Registry.widgets['Form'] = FormWidget;
-Registry.widgets['CardList'] = CardList;
+Registry.widgets['CardList'] = CardListWidget;
 Registry.dataSources['fetch'] = fetchDsService;
 //TODO: fix typings
 Registry.fields['text'] = TextField as any; //eslint-disable-line @typescript-eslint/no-explicit-any
@@ -34,7 +34,7 @@ export const MainRenderer: FC<RendererProps> = memo(({uiConfig}) => {
         <div className="taRenderer" ref={containerRef}>
             <AppBar position="static">
                 <Toolbar>
-                    <Stack gap={1} direction="row">
+                    <Stack gap={4} direction="row">
                         {uiConfig.map(page => (
                             <Link color="textPrimary" key={page.id} href={page.urlPath}>{page.name}</Link>
                         ))}

@@ -10,16 +10,21 @@ export const DropdownField: FC<DropdownFieldProps> = memo((props) => {
     let avs = props.availableValues ?? [];
     avs = [{id: '', value: '<Empty>'}, ...avs];
 
+    const displayValue: string = avs.find(av => av.id === props.value)?.value ?? '';
+
     return (
         <Stack className="taDropdownField" direction="row" gap={1} alignItems='center'>
-            <span>{props.label}</span>
-            <Select size='small'
+            <span>{props.label}:</span>
+
+            {!props.readonly && <Select size='small'
                     defaultValue={''}
-                    onChange={(evt) => props.onValueChange(evt.target.value)}>
+                    onChange={(evt) => props.onValueChange?.(evt.target.value)}>
                 {avs.map(av => (
                     <MenuItem key={av.id} value={av.id}>{av.value}</MenuItem>
                 ))}
-            </Select>
+            </Select>}
+
+            {props.readonly && <span>{displayValue}</span>}
         </Stack>
     );
 });

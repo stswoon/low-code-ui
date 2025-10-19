@@ -7,7 +7,8 @@ type HiddenFieldProps = Field;
 export const HiddenField: FC<HiddenFieldProps> = memo((props) => {
     return (
         <div className="taHiddenField" style={{display: "none"}}>
-            <input type='hidden' value={props.value}/>
+            {/*TODO typing*/}
+            <input type='hidden' value={props.value as string}/>
         </div>
     );
 });

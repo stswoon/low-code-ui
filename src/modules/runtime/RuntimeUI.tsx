@@ -11,7 +11,7 @@ export const RuntimeUI: FC = memo(() => {
     return (
         <div className="taRuntimeUI">
             <Typography variant="h3">RuntimeUI</Typography>
-            <Box sx={{height: "20px", overflow: "hidden"}}>{uiConfig}</Box>
+            {/*<Box sx={{height: "20px", overflow: "hidden"}}>{uiConfig}</Box>*/}
             <MainRenderer uiConfig={JSON.parse(uiConfig ?? '[]') as Page[]}/>
         </div>
     );

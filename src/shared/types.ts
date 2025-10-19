@@ -18,7 +18,7 @@ export interface Field {
     label: string;
     type: 'text' | 'number' | 'hidden' | 'dropdown';
     dataPath: string;
-    value?: undefined;
+    value?: unknown;
     availableValues?: { id: string; value: string }[];
 }
 

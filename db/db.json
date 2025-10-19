@@ -4,13 +4,19 @@
       "id": "1",
       "name": "Alena",
       "age": 30,
-      "gender": "woman"
+      "gender": "1"
     },
     {
       "id": "2",
       "name": "Ivan",
       "age": 20,
-      "gender": "man"
+      "gender": "0"
+    },
+    {
+      "id": "93ad",
+      "name": "test",
+      "age": "42",
+      "gender": "0"
     }
   ]
 }
