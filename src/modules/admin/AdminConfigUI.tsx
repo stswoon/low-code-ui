@@ -1,4 +1,4 @@
-import {type FC, memo, useState} from 'react';
+import {type FC, memo, useMemo, useState} from 'react';
 import {Box, Button, Stack, Typography} from "@mui/material";
 import {Editor, type EditorProps} from "@monaco-editor/react";
 import {uiExample1} from "../../shared/uiExamples.const.ts";
@@ -13,6 +13,15 @@ export const AdminConfigUI: FC = memo(() => {
     const {setUiConfig} = useAppStore()
     const [uiConfigLocal, setUiConfigLocal] = useState<string>(jsonPretty(uiExample1));
 
+    const isValid = useMemo(() => {
+        try {
+            JSON.parse(uiConfigLocal);
+            return true;
+        } catch {
+            return false;
+        }
+    }, [uiConfigLocal])
+
     const handleEditorChange = (value: string | undefined) => {
         setUiConfigLocal(value ?? '[]');
     }
@@ -21,11 +30,12 @@ export const AdminConfigUI: FC = memo(() => {
         <div className="taAdminConfigUI">
             <Typography variant="h3">AdminConfigUI</Typography>
             <Box sx={{border: "1px solid blue"}}>
-                <Editor height="500px" defaultLanguage="javascript" defaultValue={uiConfigLocal}
+                <Editor height="500px" defaultLanguage="javascript" defaultValue={uiConfigLocal} language="json"
                         onChange={handleEditorChange} options={options}/>;
             </Box>
             <Stack gap={1} direction="row">
-                <Button variant="contained" onClick={() => setUiConfig(uiConfigLocal)}>Apply</Button>
+                <Button variant="contained" onClick={() => setUiConfig(uiConfigLocal)}
+                        disabled={!isValid}>Apply</Button>
                 <Button onClick={() => setUiConfigLocal('[]')}>Clear</Button>
                 <Button onClick={() => setUiConfigLocal(jsonPretty(uiExample1))}>Example</Button>
             </Stack>
