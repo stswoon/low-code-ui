@@ -8,6 +8,6 @@ This is prototype of low code ui which supports:
 2. [x] ability to ask AI to generate and modify JSON
 3. [ ] :construction: **[NOT READY]** ability to drag&drop UI block to skip understanding of json
 
-**Architecture**:
+**Possible Architecture**:
 
 ![](LowCodeUI.drawio.png)
