@@ -6,6 +6,6 @@ This is prototype of low code ui which supports:
 
 1. [x] ability to display UI by JSON without need of frontend knowledge
 2. [x] ability to ask AI to generate and modify JSON
-3. [ ] ability to drag&drop UI block to skip understanding of json - NOT READY
+3. [ ] :construction:  ability to drag&drop UI block to skip understanding of json - **NOT READY**
 
 ![](LowCodeUI.drawio.png)
