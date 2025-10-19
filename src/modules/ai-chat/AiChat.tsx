@@ -39,9 +39,11 @@ export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
             setHistory([...history, userMsg, response])
             setUserPrompt('');
 
-            //todo: ref
-            const el = document.getElementById('123');
-            el?.scrollTo({top: el.scrollHeight, behavior: 'smooth'});
+            setTimeout(() => {
+                //todo: ref
+                const el = document.getElementById('123');
+                el?.scrollTo({top: el.scrollHeight, behavior: 'smooth'});
+            }, 500);
         } catch (e) {
             console.error("Failed from AI, cause=", e)
         } finally {
@@ -96,7 +98,7 @@ export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
                                   onChange={e => setUserPrompt(e.target.value)}/>
                 <Button variant="contained" onClick={sendAndHandleAiAnswer}
                         disabled={chatGptKey.trim().length === 0 || loading || userPrompt.trim().length === 0}
-                        loading={loading}>Send</Button>
+                        loading={loading}>Ask AI</Button>
                 <Button onClick={clear}>Clear</Button>
             </Stack>
         </Stack>
