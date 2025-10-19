@@ -8,12 +8,12 @@
     "start": "concurrently \"npm run serve:server\" \"npm run preview\"",
     "prod": "npm run lint && npm run build",
     "-----": "echo 0",
-    "serve:server": "json-server --watch db/db.json",
+    "serve:server": "json-server --watch db/db.json --port 3201",
     "serve:client": "npm run dev",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host --port 3200"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

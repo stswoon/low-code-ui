@@ -8,10 +8,10 @@ COPY db ./db
 COPY index.html tsconfig.app.json tsconfig.json tsconfig.node.json vite.config.ts eslint.config.js ./
 RUN npm run prod
 
-EXPOSE 3000
-EXPOSE 4173
+EXPOSE 3200
+EXPOSE 3201
 
 CMD npm run start
 
 # docker build . -t low-code-ui
-# docker run --rm --name low-code-ui-container -p 8220:4173 -p 8221:3000 low-code-ui
+# docker run --rm --name low-code-ui-container -p 3200:3200 -p 3201:3201 low-code-ui

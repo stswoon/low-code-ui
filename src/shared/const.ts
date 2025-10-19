@@ -1,8 +1,8 @@
 export const API_SERVER_URL = () => {
     if (location.host.startsWith('localhost:5173')) {
-        return "http://localhost:3000";
+        return "http://localhost:3201";
     } else {
-        return location.protocol + "//" + location.hostname + ":8221"
+        return location.protocol + "//" + location.hostname + ":3201"
     }
 }
 
