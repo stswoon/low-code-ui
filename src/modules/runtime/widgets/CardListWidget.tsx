@@ -1,6 +1,6 @@
 import {type FC, memo, useCallback, useEffect, useState} from 'react';
 import type {Widget} from "../../../shared/types.ts";
-import {Divider, Paper, Stack, Typography} from "@mui/material";
+import {Button, Divider, Paper, Stack, Typography} from "@mui/material";
 import {Card} from "../components/Card.tsx";
 import {Registry} from "../Registry.ts";
 
@@ -47,7 +47,10 @@ export const CardListWidget: FC<CardListProps> = memo((props) => {
         <div className="taCardList">
             <Paper sx={{margin: 2, padding: 2}}>
                 <Stack gap={4}>
-                    <Typography variant="h5">CardList: {props.name}</Typography>
+                    <Stack gap={2} direction="row">
+                        <Typography variant="h5">CardList: {props.name}</Typography>
+                        <Button onClick={getRequest}>Refresh</Button>
+                    </Stack>
                     <Divider orientation="horizontal"/>
                     {data.map(item => {
                         const fieldComponents = getFieldComponents(item);
