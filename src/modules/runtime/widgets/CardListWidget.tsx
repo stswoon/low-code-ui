@@ -54,9 +54,9 @@ export const CardListWidget: FC<CardListProps> = memo((props) => {
                     <Divider orientation="horizontal"/>
                     {data.map(item => {
                         const fieldComponents = getFieldComponents(item);
-                        return (<>
-                            <Card columns={2} fields={fieldComponents}/>
-                        </>)
+                        //TODO: typings
+                        const itemId = (item as any)['id'] ?? Math.random(); //eslint-disable-line @typescript-eslint/no-explicit-any
+                        return (<Card key={itemId} columns={2} fields={fieldComponents}/>)
                     })}
                 </Stack>
             </Paper>

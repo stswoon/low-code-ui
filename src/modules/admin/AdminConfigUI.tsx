@@ -1,9 +1,10 @@
 import {type FC, memo, useMemo, useState} from 'react';
-import {Box, Button, Stack, Typography} from "@mui/material";
+import {Box, Button, Divider, Stack, Typography} from "@mui/material";
 import {Editor, type EditorProps} from "@monaco-editor/react";
 import {uiExample1} from "../../shared/uiExamples.const.ts";
 import {jsonPretty} from "../../shared/utils.ts";
 import {useAppStore} from "../../shared/store.ts";
+import {AiChat} from "../ai-chat/AiChat.tsx";
 
 const options: EditorProps['options'] = {
     minimap: {enabled: false},
@@ -27,10 +28,10 @@ export const AdminConfigUI: FC = memo(() => {
     }
 
     return (
-        <div className="taAdminConfigUI">
+        <Stack className="taAdminConfigUI" gap={1}>
             <Typography variant="h3">AdminConfigUI</Typography>
             <Box sx={{border: "1px solid blue"}}>
-                <Editor height="500px" defaultLanguage="javascript" defaultValue={uiConfigLocal} language="json"
+                <Editor height="400px" defaultLanguage="javascript" defaultValue={uiConfigLocal} language="json"
                         onChange={handleEditorChange} options={options}/>;
             </Box>
             <Stack gap={1} direction="row">
@@ -39,7 +40,9 @@ export const AdminConfigUI: FC = memo(() => {
                 <Button onClick={() => setUiConfigLocal('[]')}>Clear</Button>
                 <Button onClick={() => setUiConfigLocal(jsonPretty(uiExample1))}>Example</Button>
             </Stack>
-        </div>
+            <Divider/>
+            <AiChat/>
+        </Stack>
     );
 });
 
