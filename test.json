@@ -1,0 +1,43 @@
+{
+  "id": "user_list_page",
+  "name": "User List",
+  "urlPath": "/users",
+  "widgets": [
+    {
+      "id": "user_list_widget",
+      "name": "User List Widget",
+      "type": "CardList",
+      "datasource": {
+        "type": "fetch",
+        "method": "GET",
+        "url": "http://localhost:3000/users"
+      },
+      "fields": [
+        {
+          "id": "user_id",
+          "label": "ID",
+          "type": "text",
+          "dataPath": "id"
+        },
+        {
+          "id": "user_name",
+          "label": "Name",
+          "type": "text",
+          "dataPath": "name"
+        },
+        {
+          "id": "user_age",
+          "label": "Age",
+          "type": "number",
+          "dataPath": "age"
+        },
+        {
+          "id": "user_gender",
+          "label": "Gender",
+          "type": "text",
+          "dataPath": "gender"
+        }
+      ]
+    }
+  ]
+}
