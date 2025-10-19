@@ -1,5 +1,5 @@
-import {type FC, memo, useMemo, useState} from 'react';
-import {Box, Button, Divider, Stack, Typography} from "@mui/material";
+import {type FC, memo, useEffect, useMemo, useState} from 'react';
+import {Box, Button, Divider, Stack, Switch, Typography} from "@mui/material";
 import {Editor, type EditorProps} from "@monaco-editor/react";
 import {uiExample1} from "../../shared/uiExamples.const.ts";
 import {jsonPretty} from "../../shared/utils.ts";
@@ -12,6 +12,7 @@ const options: EditorProps['options'] = {
 
 export const AdminConfigUI: FC = memo(() => {
     const {setUiConfig} = useAppStore()
+    const [autoApply, setAutoApply] = useState<boolean>(false);
     const [uiConfigLocal, setUiConfigLocal] = useState<string>(jsonPretty(uiExample1));
 
     const isValid = useMemo(() => {
@@ -23,8 +24,18 @@ export const AdminConfigUI: FC = memo(() => {
         }
     }, [uiConfigLocal])
 
+    useEffect(() => {
+        if (autoApply && isValid) {
+            setUiConfig(uiConfigLocal)
+        }
+    }, [autoApply, isValid, setUiConfig, uiConfigLocal]);
+
     const handleEditorChange = (value: string | undefined) => {
         setUiConfigLocal(value ?? '[]');
+    }
+
+    const handleClear = () => {
+        setUiConfigLocal('[]')
     }
 
     return (
@@ -34,10 +45,12 @@ export const AdminConfigUI: FC = memo(() => {
                 <Editor height="400px" defaultLanguage="javascript" value={uiConfigLocal} language="json"
                         onChange={handleEditorChange} options={options}/>;
             </Box>
-            <Stack gap={1} direction="row">
+            <Stack gap={1} direction="row" alignItems="center">
+                <span>Auto apply:</span>
+                <Switch onChange={(e) => setAutoApply(e.target.checked)}/>
                 <Button variant="contained" onClick={() => setUiConfig(uiConfigLocal)}
                         disabled={!isValid}>Apply</Button>
-                <Button onClick={() => setUiConfigLocal('[]')}>Clear</Button>
+                <Button onClick={handleClear}>Clear</Button>
                 <Button onClick={() => setUiConfigLocal(jsonPretty(uiExample1))}>Example</Button>
             </Stack>
             <Divider/>
