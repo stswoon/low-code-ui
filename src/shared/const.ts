@@ -1,4 +1,10 @@
-export const API_SERVER_URL = "http://localhost:3000";
+export const API_SERVER_URL = () => {
+    if (location.host.startsWith('localhost:5173')) {
+        return "http://localhost:3000";
+    } else {
+        return location.protocol + "//" + location.hostname + ":8221"
+    }
+}
 
 export const TEST_USER_MSG = `
 Создай страницу с виджетом для получения списка пользователей. 
@@ -6,7 +12,10 @@ export const TEST_USER_MSG = `
 У пользователя есть id, name, age, gender.
 `;
 
-//сдедующий вопрос убери ид из отображеия
+//для проверки контекста
+export const TEST_USER_MSG_AFTER = `
+убери ID
+`;
 
 export const SYSTEM_AI_MSG = `
 - Ты эксперт по построение UI через json модель.

@@ -20,7 +20,7 @@ export const FormWidget: FC<FormWidgetProps> = memo(props => {
         }
     }
 
-    const handleFieldValueChange = (fieldId: string, value: any): void => {
+    const handleFieldValueChange = (fieldId: string, value: unknown): void => {
         const field = props.fields.find(field => field.id === fieldId);
         if (!field) {
             throw new Error("Illegal State, field");

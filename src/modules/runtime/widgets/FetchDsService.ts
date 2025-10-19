@@ -5,7 +5,7 @@ import urlJoin from "url-join";
 
 class FetchDsService implements DatasourceService<unknown> {
     async send(config: DataSource, data: unknown): Promise<unknown> {
-        const response = await fetch(urlJoin(API_SERVER_URL, config.url), {
+        const response = await fetch(urlJoin(API_SERVER_URL(), config.url), {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ class FetchDsService implements DatasourceService<unknown> {
     }
 
     async get(config: DataSource): Promise<unknown> {
-        const response = await fetch(urlJoin(API_SERVER_URL, config.url));
+        const response = await fetch(urlJoin(API_SERVER_URL(), config.url));
         if (!response.ok) {
             throw response;
         }

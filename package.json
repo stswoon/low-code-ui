@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "serve": "concurrently \"npm run serve:server\" \"npm run serve:client\"",
-    "//serve": "json-server --watch db/db.json && npm run dev",
+    "start": "concurrently \"npm run serve:server\" \"npm run preview\"",
     "prod": "npm run lint && npm run build",
     "-----": "echo 0",
     "serve:server": "json-server --watch db/db.json",
@@ -13,7 +13,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
