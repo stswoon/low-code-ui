@@ -3,6 +3,16 @@ import type {Page} from "../../shared/types.ts";
 import {AppBar, Link, Stack, Toolbar} from "@mui/material";
 import {Route, Routes} from "react-router";
 import {PageRenderer} from "./PageRenderer.tsx";
+import {Registry} from "./Registry.ts";
+import {FormWidget} from "./widgets/FormWidget.tsx";
+import {fetchDsService} from "./widgets/FetchDsService.ts";
+import {CardList} from "./widgets/CardList.tsx";
+
+
+Registry.widgets['Form'] = FormWidget;
+Registry.widgets['CardList'] = CardList;
+Registry.dataSources['fetch'] = fetchDsService;
+
 
 interface RendererProps {
     uiConfig: Page[]
