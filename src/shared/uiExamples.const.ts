@@ -19,7 +19,7 @@ export const uiExample1: Page[] = [
         ]
     },
     {
-        id: "p2", name: "List Users Page", urlPath: "/create",
+        id: "p2", name: "List Users Page", urlPath: "/list",
         widgets: [
             {
                 id: "w2", name: "List Users Widget", type: 'CardList',

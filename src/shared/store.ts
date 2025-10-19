@@ -6,7 +6,7 @@ type AppStore = {
 }
 
 export const useAppStore = create<AppStore>()((set) => ({
-    uiConfig: '',
+    uiConfig: '[]',
     setUiConfig: (newUiConfig: string) => {
         // return set((state) => {
         return set(() => {
