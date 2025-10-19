@@ -1,8 +1,9 @@
 import {type FC, memo} from 'react';
 import {useAppStore} from "../../shared/store.ts";
-import {Box, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 import {MainRenderer} from "./MainRenderer.tsx";
 import type {Page} from "../../shared/types.ts";
+import ErrorBoundary from "./ErrorBoundary.tsx";
 
 
 export const RuntimeUI: FC = memo(() => {
@@ -10,9 +11,11 @@ export const RuntimeUI: FC = memo(() => {
 
     return (
         <div className="taRuntimeUI">
-            <Typography variant="h3">RuntimeUI</Typography>
-            {/*<Box sx={{height: "20px", overflow: "hidden"}}>{uiConfig}</Box>*/}
-            <MainRenderer uiConfig={JSON.parse(uiConfig ?? '[]') as Page[]}/>
+            <ErrorBoundary fallback={<div>Oops, it\s just a prototype</div>}>
+                <Typography variant="h3">RuntimeUI</Typography>
+                {/*<Box sx={{height: "20px", overflow: "hidden"}}>{uiConfig}</Box>*/}
+                <MainRenderer uiConfig={JSON.parse(uiConfig ?? '[]') as Page[]}/>
+            </ErrorBoundary>
         </div>
     );
 });

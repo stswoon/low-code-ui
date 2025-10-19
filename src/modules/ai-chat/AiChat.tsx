@@ -1,17 +1,21 @@
 import {Box, Button, Input, Stack, TextareaAutosize} from '@mui/material';
 import {type FC, memo, useEffect, useState} from 'react';
 import {ChatOpenAI} from "@langchain/openai";
-import {isEven} from "../../shared/utils.ts";
 import {SYSTEM_AI_MSG, TEST_USER_MSG} from "../../shared/const.ts";
 import {marked} from "marked";
+import {AIMessage, HumanMessage, SystemMessage} from "@langchain/core/messages";
 
-export const AiChat: FC = memo(() => {
+interface AiChatProps {
+    onCopyAiAnswer: (s: string) => void;
+}
+
+export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
     const [chatGptKey, setChatGptKey] = useState('');
     const [userPrompt, setUserPrompt] = useState(TEST_USER_MSG.trim());
     const [loading, setLoading] = useState(false);
     const [aiModel, setAiModel] = useState<ChatOpenAI | undefined>(undefined);
 
-    const [messages, setMessages] = useState<string[]>([]);
+    const [history, setHistory] = useState<Array<AIMessage | HumanMessage | SystemMessage>>([new SystemMessage(SYSTEM_AI_MSG.trim())]);
 
     useEffect(() => {
         const key = localStorage.getItem("chatGptKey");
@@ -22,30 +26,22 @@ export const AiChat: FC = memo(() => {
 
     const sendAndHandleAiAnswer = async () => {
         let model = aiModel;
-        let firstSystemMsg;
         if (!model) {
             model = new ChatOpenAI({apiKey: chatGptKey, model: "gpt-4-1106-preview",});
             setAiModel(model);
-            firstSystemMsg = {role: "system", content: SYSTEM_AI_MSG.trim()};
         }
 
-        // const response = await model.stream(new HumanMessage("Hello world!"));
         try {
             setLoading(true);
-
-            //TODO: get type from model.invoke
-            const aiRequest = [];
-            if (firstSystemMsg) {
-                aiRequest.push(firstSystemMsg)
-            }
-            aiRequest.push({role: "user", content: userPrompt.trim()})
-
-            const response = await model.invoke(aiRequest);
+            const userMsg = new HumanMessage(userPrompt.trim())
+            const response: AIMessage = await model.invoke([...history, userMsg]);
             // console.log(response);
-            //TODO: fix possible issue
-            const newMsg = response.content as string;
-            setMessages([...messages, userPrompt, newMsg])
+            setHistory([...history, userMsg, response])
             setUserPrompt('');
+
+            //todo: ref
+            const el = document.getElementById('123');
+            el?.scrollTo({top: el.scrollHeight, behavior: 'smooth'});
         } catch (e) {
             console.error("Failed from AI, cause=", e)
         } finally {
@@ -55,8 +51,14 @@ export const AiChat: FC = memo(() => {
 
     function clear() {
         setAiModel(undefined);
-        setMessages([]);
+        setHistory([new SystemMessage(SYSTEM_AI_MSG.trim())]);
         setUserPrompt('')
+    }
+
+    function applyAiJson() {
+        let s = history[history.length - 1].content as string;
+        s = s.replace("```json", "").replace("```", "");
+        onCopyAiAnswer?.(s);
     }
 
     return (
@@ -66,21 +68,27 @@ export const AiChat: FC = memo(() => {
                 <Input type="password" value={chatGptKey} sx={{maxWidth: "300px"}}
                        onChange={e => setChatGptKey(e.target.value)}/>
             </Stack>
-            <Stack sx={{border: "1px solid blue", height: "250px", overflowY: 'scroll'}} gap={1}>
-                {messages.map(((msg, index) => {
-                    const html = marked.parse(msg);
-                    return <Box key={msg}
+            <Stack id="123" sx={{border: "1px solid blue", height: "250px", overflowY: 'scroll'}} gap={1}>
+                {history.map(((message) => {
+                    if (message.type === 'system') {
+                        return null;
+                    }
+                    const text = message.content as string; //TODO: fix typing
+                    const html = marked.parse(text);
+                    return <Box key={text}
                                 sx={{
                                     borderRadius: "8px",
                                     padding: "8px",
-                                    marginLeft: isEven(index) ? "40px" : "0",
-                                    marginRight: isEven(index) ? "0" : "40px",
-                                    backgroundColor: isEven(index) ? "#d8f2de" : "#accdef"
+                                    marginLeft: message.type === "human" ? "40px" : "0",
+                                    marginRight: message.type === "human" ? "0" : "40px",
+                                    backgroundColor: message.type === "human" ? "#d8f2de" : "#accdef"
                                 }}
                                 dangerouslySetInnerHTML={{__html: html}}
                     />
-                    // }}>{msg}</Box>
                 }))}
+                {history.length > 1 &&
+                    <Button color={"success"} variant="outlined" sx={{width: "250px"}}
+                            onClick={applyAiJson}>Copy AI Answer to Config</Button>}
             </Stack>
             <Stack gap={1} direction="row">
                 <TextareaAutosize style={{width: "500px"}} minRows={3} maxRows={3} placeholder="Type user prompt"

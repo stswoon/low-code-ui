@@ -31,7 +31,7 @@ export const AdminConfigUI: FC = memo(() => {
         <Stack className="taAdminConfigUI" gap={1}>
             <Typography variant="h3">AdminConfigUI</Typography>
             <Box sx={{border: "1px solid blue"}}>
-                <Editor height="400px" defaultLanguage="javascript" defaultValue={uiConfigLocal} language="json"
+                <Editor height="400px" defaultLanguage="javascript" value={uiConfigLocal} language="json"
                         onChange={handleEditorChange} options={options}/>;
             </Box>
             <Stack gap={1} direction="row">
@@ -41,7 +41,7 @@ export const AdminConfigUI: FC = memo(() => {
                 <Button onClick={() => setUiConfigLocal(jsonPretty(uiExample1))}>Example</Button>
             </Stack>
             <Divider/>
-            <AiChat/>
+            <AiChat onCopyAiAnswer={(value) => setUiConfigLocal(value)}/>
         </Stack>
     );
 });
