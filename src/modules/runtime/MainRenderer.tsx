@@ -7,11 +7,21 @@ import {Registry} from "./Registry.ts";
 import {FormWidget} from "./widgets/FormWidget.tsx";
 import {fetchDsService} from "./widgets/FetchDsService.ts";
 import {CardList} from "./widgets/CardList.tsx";
+import {TextField} from "./fields/TextField.tsx";
+import {NumberField} from "./fields/NumberField.tsx";
+import {HiddenField} from "./fields/HiddenField.tsx";
+import {DropdownField} from "./fields/DropdownField.tsx";
 
 
+//In non prod need lazy loading
 Registry.widgets['Form'] = FormWidget;
 Registry.widgets['CardList'] = CardList;
 Registry.dataSources['fetch'] = fetchDsService;
+//TODO: fix typings
+Registry.fields['text'] = TextField as any; //eslint-disable-line @typescript-eslint/no-explicit-any
+Registry.fields['number'] = NumberField as any; //eslint-disable-line @typescript-eslint/no-explicit-any
+Registry.fields['hidden'] = HiddenField as any; //eslint-disable-line @typescript-eslint/no-explicit-any
+Registry.fields['dropdown'] = DropdownField as any; //eslint-disable-line @typescript-eslint/no-explicit-any
 
 
 interface RendererProps {

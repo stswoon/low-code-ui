@@ -4,16 +4,13 @@
       "id": "1",
       "name": "Alena",
       "age": 30,
-      "sex": "woman"
+      "gender": "woman"
     },
     {
       "id": "2",
       "name": "Ivan",
       "age": 20,
-      "sex": "man"
-    },
-    {
-      "id": "5505"
+      "gender": "man"
     }
   ]
 }

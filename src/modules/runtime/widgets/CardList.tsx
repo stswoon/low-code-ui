@@ -7,7 +7,7 @@ type CardListProps = Widget
 export const CardList: FC<CardListProps> = memo((props) => {
     return (
         <div className="taCardList">
-            <Paper>
+            <Paper sx={{margin: 2, padding: 2}}>
                 <Typography variant="h5">CardList: {props.name}</Typography>
                 <Divider orientation="horizontal"/>
             </Paper>

@@ -10,7 +10,7 @@ export const uiExample1: Page[] = [
                     {id: 'w1-f1', type: 'text', label: 'name', dataPath: '$.name'},
                     {id: 'w1-f2', type: 'number', label: 'age', dataPath: '$.age'},
                     {
-                        id: 'w1-f3', type: 'dropdown', label: 'sex', dataPath: '$.sex',
+                        id: 'w1-f3', type: 'dropdown', label: 'gender', dataPath: '$.gender',
                         availableValues: [{id: '0', value: 'man'}, {id: '1', value: 'woman'}]
                     },
                 ],
@@ -27,7 +27,7 @@ export const uiExample1: Page[] = [
                     {id: 'w2-f1', type: 'text', label: 'name', dataPath: '$.name'},
                     {id: 'w2-f2', type: 'number', label: 'age', dataPath: '$.age'},
                     {
-                        id: 'w2-f3', type: 'dropdown', label: 'sex', dataPath: '$.sex',
+                        id: 'w2-f3', type: 'dropdown', label: 'gender', dataPath: '$.gender',
                         availableValues: [{id: '0', value: 'man'}, {id: '1', value: 'woman'}]
                     },
                 ],

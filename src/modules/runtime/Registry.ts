@@ -1,7 +1,7 @@
 import type {ComponentType} from "react";
 import type {DataSource, Widget} from "../../shared/types.ts";
 
-type FieldProps = {
+export interface FieldProps {
     onValueChange: (value: unknown) => void;
 }
 

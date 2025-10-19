@@ -1,6 +1,6 @@
 import {type FC, memo, useState} from 'react';
 import type {Widget} from "../../../shared/types.ts";
-import {Button, Divider, Paper, Typography} from "@mui/material";
+import {Button, Divider, Paper, Stack, Typography} from "@mui/material";
 import {Registry} from "../Registry.ts";
 
 type FormWidgetProps = Widget
@@ -38,16 +38,18 @@ export const FormWidget: FC<FormWidgetProps> = memo(props => {
             <Paper sx={{margin: 2, padding: 2}}>
                 <Typography variant="h5">FormWidget: {props.name}</Typography>
                 <Divider orientation="horizontal"/>
-                {props.fields.map(field => {
-                    const Field = Registry.fields[field.type];
-                    if (!Field) {
-                        const errMsg = `Failed to find Field with type=${field.type}`;
-                        console.error(errMsg)
-                        return <div key={field.id}>{errMsg}</div>
-                    }
-                    return <Field key={field.id} {...field}
-                                  onValueChange={(value) => handleFieldValueChange(field.id, value)}/>
-                })}
+                <Stack gap={0.5}>
+                    {props.fields.map(field => {
+                        const Field = Registry.fields[field.type];
+                        if (!Field) {
+                            const errMsg = `Failed to find Field with type=${field.type}`;
+                            console.error(errMsg)
+                            return <div key={field.id}>{errMsg}</div>
+                        }
+                        return <Field key={field.id} {...field}
+                                      onValueChange={(value) => handleFieldValueChange(field.id, value)}/>
+                    })}
+                </Stack>
                 <Divider orientation="horizontal"/>
                 <Button onClick={sendRequest}>Send</Button>
             </Paper>
