@@ -7,6 +7,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import {DemoDialog} from "./shared/DemoDialog.tsx";
+
 const App = () => {
     return (
         <Stack spacing={2} divider={<Divider orientation="vertical" flexItem/>} direction="row" sx={{height: "100%"}}>
@@ -16,6 +18,7 @@ const App = () => {
             <Box sx={{width: "50vw"}}>
                 <RuntimeUI/>
             </Box>
+            <DemoDialog/>
         </Stack>
     );
 };
