@@ -1,19 +1,27 @@
-import {type FC, memo, useEffect, useMemo, useState} from 'react';
-import {Box, Button, Divider, Stack, Switch, Typography} from "@mui/material";
+import {type FC, memo, useEffect, useMemo, useState} from "react";
+import {Box, Button, Stack, Switch, Typography} from "@mui/material";
 import {Editor, type EditorProps} from "@monaco-editor/react";
-import {uiExample1} from "../../shared/uiExamples.const.ts";
 import {jsonPretty} from "../../shared/utils.ts";
+import {uiExample1} from "../../shared/uiExamples.const.ts";
 import {useAppStore} from "../../shared/store.ts";
-import {AiChat} from "../ai-chat/AiChat.tsx";
 
 const options: EditorProps['options'] = {
     minimap: {enabled: false},
+    fontSize: 10
 };
 
-export const AdminConfigUI: FC = memo(() => {
-    const {setUiConfig} = useAppStore()
+export const JsonConfig: FC = memo(() => {
+    const {uiConfig, setUiConfig} = useAppStore()
     const [autoApply, setAutoApply] = useState<boolean>(false);
     const [uiConfigLocal, setUiConfigLocal] = useState<string>(jsonPretty(uiExample1));
+
+    const handleEditorChange = (value: string | undefined) => {
+        setUiConfigLocal(value ?? '[]');
+    }
+
+    const handleClear = () => {
+        setUiConfigLocal('[]')
+    }
 
     const isValid = useMemo(() => {
         try {
@@ -25,24 +33,20 @@ export const AdminConfigUI: FC = memo(() => {
     }, [uiConfigLocal])
 
     useEffect(() => {
+        setUiConfigLocal(jsonPretty(JSON.parse(uiConfig)))
+    }, [uiConfig])
+
+    useEffect(() => {
         if (autoApply && isValid) {
             setUiConfig(uiConfigLocal)
         }
     }, [autoApply, isValid, setUiConfig, uiConfigLocal]);
 
-    const handleEditorChange = (value: string | undefined) => {
-        setUiConfigLocal(value ?? '[]');
-    }
-
-    const handleClear = () => {
-        setUiConfigLocal('[]')
-    }
-
     return (
-        <Stack className="taAdminConfigUI" gap={1}>
-            <Typography variant="h3">AdminConfigUI</Typography>
+        <Stack gap={1}>
+            <Typography variant="h4">Json View</Typography>
             <Box sx={{border: "1px solid blue"}}>
-                <Editor height="400px" defaultLanguage="javascript" value={uiConfigLocal} language="json"
+                <Editor height="300px" defaultLanguage="javascript" value={uiConfigLocal} language="json"
                         onChange={handleEditorChange} options={options}/>;
             </Box>
             <Stack gap={1} direction="row" alignItems="center">
@@ -53,10 +57,8 @@ export const AdminConfigUI: FC = memo(() => {
                 <Button onClick={handleClear}>Clear</Button>
                 <Button onClick={() => setUiConfigLocal(jsonPretty(uiExample1))}>Example</Button>
             </Stack>
-            <Divider/>
-            <AiChat onCopyAiAnswer={(value) => setUiConfigLocal(value)}/>
         </Stack>
-    );
+    )
 });
 
-AdminConfigUI.displayName = "AdminConfigUI";
+JsonConfig.displayName = "JsonConfig";

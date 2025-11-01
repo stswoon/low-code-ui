@@ -42,6 +42,7 @@ export const MainRenderer: FC<RendererProps> = memo(({uiConfig}) => {
                 </Toolbar>
             </AppBar>
             <Routes>
+                <Route key="\" path="" element={null}/>
                 {uiConfig.map(page => (
                     <Route key={page.id} path={page.urlPath} element={<PageRenderer config={page}/>}/>
                 ))}
