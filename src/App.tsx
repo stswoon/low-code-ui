@@ -48,7 +48,7 @@ const App = () => {
                     </PanelGroup>
                 </Panel>
             </PanelGroup>
-            {/*<DemoDialog/>*/}
+            <DemoDialog/>
         </>
     );
 };
