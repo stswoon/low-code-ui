@@ -3,10 +3,10 @@ import {Divider, Stack, Typography} from "@mui/material";
 import {useAppStore} from "../../shared/store.ts";
 import {Brick} from "./components/Brick.tsx";
 import {DndContext, DragOverlay, useDraggable} from "@dnd-kit/core";
-import {nanoid} from "nanoid";
 import {TreeNone} from "./components/TreeNodeBricks.tsx";
-import type {DataSource, Page, Widget} from "../../shared/types.ts";
+import type {DataSource, Field, Page, Widget} from "../../shared/types.ts";
 import {DropZone} from "./components/DropZone.tsx";
+import {getId} from "../../shared/utils.ts";
 
 
 export const LowCodeAdminConfigUI: FC = memo(() => {
@@ -42,19 +42,19 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
             const type = event.active.data.current.type;
             if (over.id === 'globalZone' && type === 'Page') {
                 console.log(`Dropped over: ${over.id}`);
-                const newPage: Page = {id: nanoid(), widgets: [], urlPath: "/", name: "new page"}
+                const newPage: Page = {id: getId(), widgets: [], urlPath: "/newPage", name: "new page"}
                 const newUiConfigAsAdminBricks = [...uiConfigJson, newPage];
                 setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
             } else if (over.id.startsWith('pageZone_') && type === 'Widget') {
                 console.log(`Dropped over: ${over.id}`);
                 const pageId = over.id.split("_")[1];
-                const label = event.active.data.current.label;
+                const widgetType = event.active.data.current.label;
                 const newDatasource: DataSource = {type: "fetch", url: "/", method: "GET"};
                 const newWidget: Widget = {
-                    id: nanoid(),
+                    id: getId(),
                     fields: [],
                     name: "new widget",
-                    type: label,
+                    type: widgetType,
                     datasource: newDatasource
                 }
                 let newUiConfigAsAdminBricks = [...uiConfigJson];
@@ -68,7 +68,31 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                 setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
             } else if (over.id.startsWith('widgetZone_') && (type === 'Field' || type === 'Datasource')) {
                 console.log(`Dropped over: ${over.id}`);
-                //TODO
+
+                const widgetId = over.id.split("_")[1];
+                const fieldType = event.active.data.current.label;
+                const newField: Field = {
+                    type: fieldType,
+                    label: "New Field",
+                    id: getId(),
+                    availableValues: undefined,
+                    value: undefined,
+                    dataPath: ""
+                };
+
+                let newUiConfigAsAdminBricks = [...uiConfigJson];
+                newUiConfigAsAdminBricks = newUiConfigAsAdminBricks.map(page => {
+                    const newPage = {...page};
+                    newPage.widgets = newPage.widgets.map(widget => {
+                        if (widget.id === widgetId) {
+                            return {...widget, fields: [...widget.fields, newField]}
+                        } else {
+                            return widget;
+                        }
+                    })
+                    return newPage;
+                })
+                setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
             }
         } else {
             console.log('Dropped outside any zone');
