@@ -1,15 +1,14 @@
-import {Box, Button, Input, Stack, TextareaAutosize} from '@mui/material';
+import {Box, Button, Input, Stack, TextareaAutosize, Typography} from '@mui/material';
 import {type FC, memo, useEffect, useState} from 'react';
 import {ChatOpenAI} from "@langchain/openai";
 import {SYSTEM_AI_MSG, TEST_USER_MSG} from "../../shared/const.ts";
 import {marked} from "marked";
 import {AIMessage, HumanMessage, SystemMessage} from "@langchain/core/messages";
+import {useAppStore} from "../../shared/store.ts";
 
-interface AiChatProps {
-    onCopyAiAnswer: (s: string) => void;
-}
+export const AiChat: FC = memo(() => {
+    const {setUiConfig} = useAppStore();
 
-export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
     const [chatGptKey, setChatGptKey] = useState('');
     const [userPrompt, setUserPrompt] = useState(TEST_USER_MSG.trim());
     const [loading, setLoading] = useState(false);
@@ -60,11 +59,12 @@ export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
     function applyAiJson() {
         let s = history[history.length - 1].content as string;
         s = s.replace("```json", "").replace("```", "");
-        onCopyAiAnswer?.(s);
+        setUiConfig(s);
     }
 
     return (
         <Stack className="taAiChat" gap={1}>
+            <Typography variant="h4">ChatGPT config assistant</Typography>
             <Stack direction="row" gap={1}>
                 <span>ChatGptKey:</span>
                 <Input type="password" value={chatGptKey} sx={{maxWidth: "300px"}}
@@ -77,16 +77,18 @@ export const AiChat: FC<AiChatProps> = memo(({onCopyAiAnswer}) => {
                     }
                     const text = message.content as string; //TODO: fix typing
                     const html = marked.parse(text);
-                    return <Box key={text}
-                                sx={{
-                                    borderRadius: "8px",
-                                    padding: "8px",
-                                    marginLeft: message.type === "human" ? "40px" : "0",
-                                    marginRight: message.type === "human" ? "0" : "40px",
-                                    backgroundColor: message.type === "human" ? "#d8f2de" : "#accdef"
-                                }}
-                                dangerouslySetInnerHTML={{__html: html}}
-                    />
+                    return (
+                        <Box key={text}
+                             sx={{
+                                 borderRadius: "8px",
+                                 padding: "8px",
+                                 marginLeft: message.type === "human" ? "40px" : "0",
+                                 marginRight: message.type === "human" ? "0" : "40px",
+                                 backgroundColor: message.type === "human" ? "#d8f2de" : "#accdef"
+                             }}
+                             dangerouslySetInnerHTML={{__html: html}}
+                        />
+                    );
                 }))}
                 {history.length > 1 &&
                     <Button color={"success"} variant="outlined" sx={{width: "250px"}}

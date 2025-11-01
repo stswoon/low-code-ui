@@ -12,7 +12,7 @@ export const RuntimeUI: FC = memo(() => {
     return (
         <div className="taRuntimeUI">
             <ErrorBoundary fallback={<div>Oops, it\s just a prototype</div>}>
-                <Typography variant="h3">RuntimeUI</Typography>
+                <Typography variant="h4">RuntimeUI</Typography>
                 {/*<Box sx={{height: "20px", overflow: "hidden"}}>{uiConfig}</Box>*/}
                 <MainRenderer uiConfig={JSON.parse(uiConfig ?? '[]') as Page[]}/>
             </ErrorBoundary>
