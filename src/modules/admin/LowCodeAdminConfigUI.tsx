@@ -1,13 +1,25 @@
-import {type FC, memo, useState} from 'react';
+import {type FC, memo, type ReactNode, useMemo, useState} from 'react';
 import {Divider, Stack, Typography} from "@mui/material";
-// import {useAppStore} from "../../shared/store.ts";
+import {useAppStore} from "../../shared/store.ts";
 import {Brick} from "./components/Brick.tsx";
-import {DndContext, DragOverlay, useDraggable, useDroppable} from "@dnd-kit/core";
+import {DndContext, DragOverlay, useDraggable} from "@dnd-kit/core";
+import {nanoid} from "nanoid";
+import {TreeNone} from "./components/TreeNodeBricks.tsx";
+import type {DataSource, Page, Widget} from "../../shared/types.ts";
+import {DropZone} from "./components/DropZone.tsx";
 
 
 export const LowCodeAdminConfigUI: FC = memo(() => {
-    // const {setUiConfig} = useAppStore();
-    // const [dragToElems, setDragToElems] = useState<ReactNode>([]);
+    const {uiConfig, setUiConfig} = useAppStore();
+
+    const uiConfigJson = JSON.parse(uiConfig ?? '[]') as Page[]
+
+    const uiConfigAsAdminBricks: ReactNode = useMemo(() => {
+        return <TreeNone data={uiConfigJson}/>;
+    }, [uiConfigJson])
+
+
+    // const [dragToElems, setDragToElems] = useState<ReactNode[]>([]);
 
     const dragFromElems = [
         {type: "Page"},
@@ -23,11 +35,41 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
     const [activeId, setActiveId] = useState(null);
 
     const handleDragEnd = (event: any) => {
-        setActiveId(null)
-
+        // console.log(`Dropped event:`, event);
+        setActiveId(null);
         const {over} = event;
         if (over) {
-            console.log(`Dropped over: ${over.id}`);
+            const type = event.active.data.current.type;
+            if (over.id === 'globalZone' && type === 'Page') {
+                console.log(`Dropped over: ${over.id}`);
+                const newPage: Page = {id: nanoid(), widgets: [], urlPath: "/", name: "new page"}
+                const newUiConfigAsAdminBricks = [...uiConfigJson, newPage];
+                setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
+            } else if (over.id.startsWith('pageZone_') && type === 'Widget') {
+                console.log(`Dropped over: ${over.id}`);
+                const pageId = over.id.split("_")[1];
+                const label = event.active.data.current.label;
+                const newDatasource: DataSource = {type: "fetch", url: "/", method: "GET"};
+                const newWidget: Widget = {
+                    id: nanoid(),
+                    fields: [],
+                    name: "new widget",
+                    type: label,
+                    datasource: newDatasource
+                }
+                let newUiConfigAsAdminBricks = [...uiConfigJson];
+                newUiConfigAsAdminBricks = newUiConfigAsAdminBricks.map(page => {
+                    if (page.id === pageId) {
+                        return {...page, widgets: [...page.widgets, newWidget]}
+                    } else {
+                        return page;
+                    }
+                })
+                setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
+            } else if (over.id.startsWith('widgetZone_') && (type === 'Field' || type === 'Datasource')) {
+                console.log(`Dropped over: ${over.id}`);
+                //TODO
+            }
         } else {
             console.log('Dropped outside any zone');
         }
@@ -47,7 +89,6 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                         {dragFromElems.map(elem => {
                             const id = elem.type + "_" + elem.label;
                             return (
-
                                 <div key={id}>
                                     <DragOverlay dropAnimation={null}>
                                         {activeId === id ? <div style={{opacity: 0.6}}>
@@ -55,7 +96,7 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                                         </div> : null}
                                     </DragOverlay>
 
-                                    <DraggableItem id={id}>
+                                    <DraggableItem id={id} data={elem}>
                                         <div className="dragMe">
                                             <Brick type={elem.type as never} label={elem.label}/>
                                         </div>
@@ -70,12 +111,11 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                         })}
                     </Stack>
 
-                    <Stack className="dragTo">
-                        <DropZone/>
-                        {/*{dragToElems}*/}
+                    <Stack className="dragTo" sx={{width: "100%", overflowY: "scroll", height: "400px"}}>
+                        <DropZone id="globalZone" showDropLabel={true}>
+                            {uiConfigAsAdminBricks}
+                        </DropZone>
                     </Stack>
-
-
                 </Stack>
             </DndContext>
         </Stack>
@@ -85,28 +125,9 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
 LowCodeAdminConfigUI.displayName = "LowCodeAdminConfigUI";
 
 
-function DraggableItem({children, id}) {
-    const {listeners, setNodeRef} = useDraggable({id});
+function DraggableItem({children, id, data}) {
+    const {listeners, setNodeRef} = useDraggable({id, data});
     return (<div ref={setNodeRef} {...listeners}>{children}</div>);
 }
 
 
-function DropZone() {
-    const {isOver, setNodeRef} = useDroppable({id: 'droppable-1'});
-
-    const style = {
-        width: 200,
-        height: 200,
-        border: '2px dashed #aaa',
-        backgroundColor: isOver ? '#dcedc8' : '#f5f5f5',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    };
-
-    return (
-        <div ref={setNodeRef} style={style}>
-            Drop here
-        </div>
-    );
-}

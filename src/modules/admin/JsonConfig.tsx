@@ -33,7 +33,7 @@ export const JsonConfig: FC = memo(() => {
     }, [uiConfigLocal])
 
     useEffect(() => {
-        setUiConfigLocal(uiConfig)
+        setUiConfigLocal(jsonPretty(JSON.parse(uiConfig)))
     }, [uiConfig])
 
     useEffect(() => {

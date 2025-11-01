@@ -1,11 +1,13 @@
-import {type FC, memo} from 'react';
+import {type FC, memo, type ReactNode} from 'react';
+import {Stack} from "@mui/material";
 
 interface BrickProps {
     type: 'Page' | 'Widget' | 'Datasource' | "Field"
-    label?: string
+    label?: string;
+    children?: ReactNode;
 }
 
-export const Brick: FC<BrickProps> = memo(({type, label}) => {
+export const Brick: FC<BrickProps> = memo(({type, label, children}) => {
     const backgroundColor =
         type === 'Page' ? "brown" :
             type === "Widget" ? "green" :
@@ -14,12 +16,17 @@ export const Brick: FC<BrickProps> = memo(({type, label}) => {
     return (
         <div className="taBrick"
              style={{
-                 width: "150px",
-                 height: "32px",
+                 minWidth: "150px",
+                 minHeight: "32px",
                  backgroundColor,
                  padding: "8px"
              }}
-        >{type}{label ? ": " + label : ""}</div>
+        >
+            <Stack gap={1}>
+            <span style={{marginBottom: '4px'}}>{type}{label ? ": " + label : ""}</span>
+            {children}
+            </Stack>
+        </div>
     );
 });
 
