@@ -1,8 +1,6 @@
 import {type FC, memo, useState} from 'react';
 import {Divider, Stack, Typography} from "@mui/material";
 // import {useAppStore} from "../../shared/store.ts";
-import Draggable from "react-draggable";
-import {nanoid} from 'nanoid'
 import {Brick} from "./components/Brick.tsx";
 import {DndContext, DragOverlay, useDraggable, useDroppable} from "@dnd-kit/core";
 
@@ -24,7 +22,7 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
 
     const [activeId, setActiveId] = useState(null);
 
-    const handleDragEnd = (event) => {
+    const handleDragEnd = (event: any) => {
         setActiveId(null)
 
         const {over} = event;
@@ -39,7 +37,7 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
         <Stack className="taAdminConfigUI" gap={1} sx={{height: "100%"}}>
             <Typography variant="h4">LowCodeAdminConfigUI</Typography>
 
-            <DndContext onDragStart={({active}) => setActiveId(active.id)} onDragEnd={handleDragEnd}>
+            <DndContext onDragStart={({active}) => setActiveId(active.id as any)} onDragEnd={handleDragEnd}>
                 <Stack spacing={1}
                        divider={<Divider orientation="vertical" flexItem/>}
                        direction="row"
