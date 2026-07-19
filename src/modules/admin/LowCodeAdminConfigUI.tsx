@@ -49,7 +49,7 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                 console.log(`Dropped over: ${over.id}`);
                 const pageId = over.id.split("_")[1];
                 const widgetType = event.active.data.current.label;
-                const newDatasource: DataSource = {type: "fetch", url: "/", method: "GET"};
+                const newDatasource: DataSource = {type: "fetch", url: "/users", method: "GET"};
                 const newWidget: Widget = {
                     id: getId(),
                     fields: [],
@@ -66,18 +66,19 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                     }
                 })
                 setUiConfig(JSON.stringify(newUiConfigAsAdminBricks));
-            } else if (over.id.startsWith('widgetZone_') && (type === 'Field' || type === 'Datasource')) {
+            // } else if (over.id.startsWith('widgetZone_') && (type === 'Field' || type === 'Datasource')) {
+            } else if (over.id.startsWith('widgetZone_') && (type === 'Field')) {
                 console.log(`Dropped over: ${over.id}`);
 
                 const widgetId = over.id.split("_")[1];
                 const fieldType = event.active.data.current.label;
                 const newField: Field = {
                     type: fieldType,
-                    label: "New Field",
+                    label: "ID",
                     id: getId(),
                     availableValues: undefined,
                     value: undefined,
-                    dataPath: ""
+                    dataPath: "$.id"
                 };
 
                 let newUiConfigAsAdminBricks = [...uiConfigJson];
