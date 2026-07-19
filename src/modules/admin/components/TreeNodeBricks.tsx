@@ -5,7 +5,8 @@ import {DropZone} from "./DropZone.tsx";
 
 export function TreeNone({data}: { data: Page[] }) {
     return (
-        <>
+        <div style={{minHeight: "100px"}}>
+            {!data.length && <p>Drop here</p>}
             {data.map(page => (
                 <DropZone key={page.id} id={`pageZone_${page.id}`}>
                     <Brick type={'Page'} label={page.urlPath}>
@@ -25,6 +26,6 @@ export function TreeNone({data}: { data: Page[] }) {
                     </Brick>
                 </DropZone>
             ))}
-        </>
+        </div>
     )
 }

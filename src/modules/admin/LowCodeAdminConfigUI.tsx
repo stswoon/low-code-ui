@@ -136,7 +136,7 @@ export const LowCodeAdminConfigUI: FC = memo(() => {
                     </Stack>
 
                     <Stack className="dragTo" sx={{width: "100%", overflowY: "scroll", height: "400px"}}>
-                        <DropZone id="globalZone" showDropLabel={true}>
+                        <DropZone id="globalZone">
                             {uiConfigAsAdminBricks}
                         </DropZone>
                     </Stack>
