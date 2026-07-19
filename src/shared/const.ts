@@ -1,3 +1,7 @@
+export const DEFAULT_CHATGPT_MODEL = 'gpt-5.6-sol';
+export const CHATGPT_MODEL_STORAGE_KEY = 'chatGptModel';
+export const CHATGPT_KEY_STORAGE_KEY = 'chatGptKey';
+
 export const API_SERVER_URL = () => {
     if (location.host.startsWith('localhost:5173')) {
         return "http://localhost:3201";
