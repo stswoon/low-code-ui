@@ -7,24 +7,29 @@ interface BrickProps {
     children?: ReactNode;
 }
 
+const colorUtil = (type: string) => {
+    switch (type) {
+        case "Page":
+            return "brown";
+        case "Widget":
+            return "green";
+        case "Datasource":
+            return "orange";
+        default:
+            return "lightgray";
+    }
+}
+
 export const Brick: FC<BrickProps> = memo(({type, label, children}) => {
-    const backgroundColor =
-        type === 'Page' ? "brown" :
-            type === "Widget" ? "green" :
-                type === "Datasource" ? "orange" :
-                    "lightgray"
+    const backgroundColor = colorUtil(type);
+
     return (
         <div className="taBrick"
-             style={{
-                 minWidth: "150px",
-                 minHeight: "32px",
-                 backgroundColor,
-                 padding: "8px"
-             }}
+             style={{minWidth: "150px", minHeight: "32px", padding: "8px", backgroundColor}}
         >
             <Stack gap={1}>
-            <span style={{marginBottom: '4px'}}>{type}{label ? ": " + label : ""}</span>
-            {children}
+                <span style={{marginBottom: '4px'}}>{type}{label ? ": " + label : ""}</span>
+                {children}
             </Stack>
         </div>
     );

@@ -1,11 +1,17 @@
 import {Dialog, DialogContent, DialogTitle, Link, Stack} from '@mui/material';
 import {type FC, memo, useState} from 'react';
 
+
 export const DemoDialog: FC = memo(() => {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(localStorage.getItem("DemoDialog") !== "false");
+
+    const handleClose = () => {
+        setOpen(false);
+        localStorage.setItem("DemoDialog", String(false));
+    }
 
     return (
-        <Dialog onClose={() => setOpen(false)} open={open} className="taDemoDialog" maxWidth="xl">
+        <Dialog onClose={handleClose} open={open} className="taDemoDialog" maxWidth="xl">
             <DialogTitle>Demo</DialogTitle>
             <DialogContent>
                 <Stack gap={2}>

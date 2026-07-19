@@ -12,8 +12,9 @@ const options: EditorProps['options'] = {
 
 export const JsonConfig: FC = memo(() => {
     const {uiConfig, setUiConfig} = useAppStore()
-    const [autoApply, setAutoApply] = useState<boolean>(false);
-    const [uiConfigLocal, setUiConfigLocal] = useState<string>(jsonPretty(uiExample1));
+    const [autoApply, setAutoApply] = useState<boolean>(true);
+    // const [uiConfigLocal, setUiConfigLocal] = useState<string>(jsonPretty(uiExample1));
+    const [uiConfigLocal, setUiConfigLocal] = useState<string>("[]");
 
     const handleEditorChange = (value: string | undefined) => {
         setUiConfigLocal(value ?? '[]');
@@ -51,7 +52,7 @@ export const JsonConfig: FC = memo(() => {
             </Box>
             <Stack gap={1} direction="row" alignItems="center">
                 <span>Auto apply:</span>
-                <Switch onChange={(e) => setAutoApply(e.target.checked)}/>
+                <Switch checked={autoApply} onChange={(e) => setAutoApply(e.target.checked)}/>
                 <Button variant="contained" onClick={() => setUiConfig(uiConfigLocal)}
                         disabled={!isValid}>Apply</Button>
                 <Button onClick={handleClear}>Clear</Button>

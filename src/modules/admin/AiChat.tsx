@@ -1,7 +1,13 @@
 import {Box, Button, Input, Stack, TextareaAutosize, Typography} from '@mui/material';
-import {type FC, memo, useEffect, useState} from 'react';
+import {type FC, memo, useState} from 'react';
 import {ChatOpenAI} from "@langchain/openai";
-import {SYSTEM_AI_MSG, TEST_USER_MSG} from "../../shared/const.ts";
+import {
+    CHATGPT_KEY_STORAGE_KEY,
+    CHATGPT_MODEL_STORAGE_KEY,
+    DEFAULT_CHATGPT_MODEL,
+    SYSTEM_AI_MSG,
+    TEST_USER_MSG
+} from "../../shared/const.ts";
 import {marked} from "marked";
 import {AIMessage, HumanMessage, SystemMessage} from "@langchain/core/messages";
 import {useAppStore} from "../../shared/store.ts";
@@ -9,24 +15,28 @@ import {useAppStore} from "../../shared/store.ts";
 export const AiChat: FC = memo(() => {
     const {setUiConfig} = useAppStore();
 
-    const [chatGptKey, setChatGptKey] = useState('');
+    const [chatGptKey, setChatGptKey] = useState(localStorage.getItem(CHATGPT_KEY_STORAGE_KEY) ?? '');
+    const [chatGptModel, setChatGptModel] = useState(localStorage.getItem(CHATGPT_MODEL_STORAGE_KEY) ?? DEFAULT_CHATGPT_MODEL);
     const [userPrompt, setUserPrompt] = useState(TEST_USER_MSG.trim());
     const [loading, setLoading] = useState(false);
     const [aiModel, setAiModel] = useState<ChatOpenAI | undefined>(undefined);
 
     const [history, setHistory] = useState<Array<AIMessage | HumanMessage | SystemMessage>>([new SystemMessage(SYSTEM_AI_MSG.trim())]);
 
-    useEffect(() => {
-        const key = localStorage.getItem("chatGptKey");
-        if (key) {
-            setChatGptKey(key);
-        }
-    }, []);
+    const handleChatGptModel = (model: string) => {
+        setChatGptModel(model);
+        localStorage.setItem(CHATGPT_MODEL_STORAGE_KEY, model);
+    };
+
+    const handleChatGptKeyChange = (key: string) => {
+        setChatGptKey(key);
+        localStorage.setItem(CHATGPT_KEY_STORAGE_KEY, key);
+    };
 
     const sendAndHandleAiAnswer = async () => {
         let model = aiModel;
         if (!model) {
-            model = new ChatOpenAI({apiKey: chatGptKey, model: "gpt-4-1106-preview",});
+            model = new ChatOpenAI({apiKey: chatGptKey, model: chatGptModel});
             setAiModel(model);
         }
 
@@ -62,13 +72,20 @@ export const AiChat: FC = memo(() => {
         setUiConfig(s);
     }
 
+    const disabledAskAI = chatGptKey.trim().length === 0 || chatGptModel.trim().length === 0 || loading || userPrompt.trim().length === 0;
+
     return (
         <Stack className="taAiChat" gap={1}>
             <Typography variant="h4">ChatGPT config assistant</Typography>
-            <Stack direction="row" gap={1}>
+            <Stack direction="row" gap={1} alignItems="center">
                 <span>ChatGptKey:</span>
                 <Input type="password" value={chatGptKey} sx={{maxWidth: "300px"}}
-                       onChange={e => setChatGptKey(e.target.value)}/>
+                       onChange={e => handleChatGptKeyChange(e.target.value)}
+                />
+                <span>Model:</span>
+                <Input value={chatGptModel} sx={{maxWidth: "220px"}}
+                       onChange={e => handleChatGptModel(e.target.value)}
+                />
             </Stack>
             <Stack id="123" sx={{border: "1px solid blue", height: "250px", overflowY: 'scroll'}} gap={1}>
                 {history.map(((message) => {
@@ -99,8 +116,7 @@ export const AiChat: FC = memo(() => {
                                   value={userPrompt}
                                   onChange={e => setUserPrompt(e.target.value)}/>
                 <Button variant="contained" onClick={sendAndHandleAiAnswer}
-                        disabled={chatGptKey.trim().length === 0 || loading || userPrompt.trim().length === 0}
-                        loading={loading}>Ask AI</Button>
+                        disabled={disabledAskAI} loading={loading}>Ask AI</Button>
                 <Button onClick={clear}>Clear</Button>
             </Stack>
         </Stack>
